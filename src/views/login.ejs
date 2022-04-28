@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="titulo">Acceso a la Pagina</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <figure>
+        <img src="/img/movies.png" alt="Fun Movies Now">
+    </figure>
+    <h1 class="titulo">Acceso a Fun Movies</h1>
+    <!-- Login Form -->
+    <section class="formulario">
+        <form action="/login" method="POST">
+          <div>
+            <label for="user" ><b>Usuario:</b></label>
+            <input type="text" id="user" name="usuario" placeholder="usuario" required>
+            <label for="psw" ><b>Contraseña:</b></label>
+            <input type="password" id="password" placeholder="Contraseña" name="psw" required>
+          </div>
+          <br>
+          <div>  
+            <button type="submit" class="botonVolver" style="background-color: darkkhaki; color: black">Acceder</button>
+            <a class="botonVolver" href="/">Regresar a home</a>
+          </div>
+          <div>
+              <label>
+                  <input type="checkbox" checked="checked" name="remember">Recordarme en este equipo
+              </label>
+          </div>
+          <br>
+          <div style="background-color:#b4b9b9">
+              <span class="psw">Olvidaste tu password?</span>
+          </div>
+          <a class="underlineHover" href="/register">No tienes cuenta? Registrate aqui</a>
+        </form>
+      </section>
+</body>
+</html>

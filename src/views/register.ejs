@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="titulo">Registro de Usuario</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <figure>
+        <img src="/img/movies.png" alt="Fun Movies Now">
+    </figure>
+    <h1 class="titulo">Registro a Fun Movies</h1>
+    <h2 class="active" >Forma de Registro</h2>
+    <!-- Register Form -->
+    <section class="formulario">
+        <form action="/register" method="POST">
+            <input type="text" id="user" name="usuario" placeholder="usuario" required>
+            <br>
+            <input type="password" id="password" name="password" placeholder="contraseña" required>
+            <input type="password" id="repeatPass" name="repeatPass" placeholder="repetir contraseña" required>
+            <input type="email" id="email" name="email" placeholder="correo electrónico">
+            <input type="text" id="rememberToken" name="rememberToken" placeholder="Token de seguridad">
+            <input type="text" id="rol" name="rol" placeholder="Rol: user=0, admin !=0"><br>
+            <button type="submit" class="botonVolver" style="background-color: darkkhaki; color: black">Registrate</button>
+            <br>
+            <div class="col-12 col-md-6">
+                <label for="rol" class="form-label"><b>Rol a desempeñar:</b></label>
+                <input type="text" id="rol" name="rol" placeholder="Rol que desempeña" required>
+            </div> 
+            <div>
+                <button type="button" class="botonBorrar">Cancelar</button>
+                <a  class="botonVolver" href="/">Listado de Películas</a>
+            </div>
+            <a class="underlineHover" href="/login">¿Ya tienes cuenta? Accede desde aquí</a>
+        </form>
+    </section>
+</body>
+</html>
