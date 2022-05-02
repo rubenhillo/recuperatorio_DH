@@ -2,72 +2,40 @@ const path = require('path');
 const db = require('../database/models');
 const sequelize = db.sequelize;
 const { Op, where } = require("sequelize");
-const moment = require('moment');
+const {validationResult, check} = require('express-validator');
 const req = require('express/lib/request');
-const { Where } = require('sequelize/types/utils');
+//const { Where } = require('sequelize/types/utils');
 
-
-//Aqui tienen otra forma de llamar a cada uno de los modelos
 const Movies = db.Movie;
 const Genres = db.Genre;
 const Actors = db.Actor;
+const Users = db.User;
 
 
 const moviesController = {
-
-    
+   
     'list': (req, res) => {
         db.Movie.findAll({
             include: ['genre']
         })
             .then(movies => {
-                res.render('movieList.ejs',  {movies}, {title: 'Fun Movies Now'}    )
+                res.render('movieList.ejs',  {movies} )
             })
     },
     'detail': (req, res) => {
         db.Movie.findByPk(req.params.id,
             {
-                include: ['genre'],
-                include: ['actors'],
-                include: ['actor_movie'],
+                include: ['genre','actors','actor_movie'],
+               /*  include: ['actors'],
+                include: ['actor_movie'], */
                 where: {
-                    [actor_id = actor.id]:[movie.id = movie_id]
+                    [actor_id = req.body.actor.id]:[movie.id = movie_id]
                 },
             })
             .then(movie => {
                 res.render('moviesDetail.ejs', {movie});
             });
     },
-
-
-
- /*    'new': (req, res) => {
-        db.Movie.findAll({
-            order : [
-                ['release_date', 'DESC']
-            ],
-            limit: 5
-        })
-            .then(movies => {
-                res.render('newestMovies', {movies});
-            });
-    },
-    'recomended': (req, res) => {
-        db.Movie.findAll({
-            include: ['genre'],
-            where: {
-                rating: {[db.Sequelize.Op.gte] : 8}
-            },
-            order: [
-                ['rating', 'DESC']
-            ]
-        })
-            .then(movies => {
-                res.render('recommendedMovies.ejs', {movies});
-            });
-    }, */
-    
-    
     
     //Aqui dispongo las rutas para trabajar con el CRUD
     add: function (req, res) {
@@ -80,7 +48,7 @@ const moviesController = {
             return res.render(path.resolve(__dirname, '..', 'views',  'moviesAdd'), {allGenres,allActors})})
         .catch(error => res.send(error))
     },
-    create: function (req,res) {
+    'create': function (req,res) {
         Movies
         .create(
             {
@@ -96,7 +64,7 @@ const moviesController = {
             return res.redirect('/movies')})            
         .catch(error => res.send(error))
     },
-    edit: function(req,res) {
+    'edit': function(req,res) {
         let movieId = req.params.id;
         let promMovies = Movies.findByPk(movieId,{include: ['genre','actors']});
         let promGenres = Genres.findAll();
@@ -108,7 +76,7 @@ const moviesController = {
             return res.render(path.resolve(__dirname, '..', 'views',  'moviesEdit'), {Movie,allGenres,allActors})})
         .catch(error => res.send(error))
     },
-    update: function (req,res) {
+    'update': function (req,res) {
         let movieId = req.params.id;
         Movies
         .update(
@@ -127,7 +95,7 @@ const moviesController = {
             return res.redirect('/movies')})            
         .catch(error => res.send(error))
     },
-    delete: function (req,res) {
+    'delete': function (req,res) {
         let movieId = req.params.id;
         Movies
         .findByPk(movieId)
@@ -135,7 +103,7 @@ const moviesController = {
             return res.render(path.resolve(__dirname, '..', 'views',  'moviesDelete'), {Movie})})
         .catch(error => res.send(error))
     },
-    destroy: function (req,res) {
+    'destroy': function (req,res) {
         let movieId = req.params.id;
         Movies
         .destroy({where: {id: movieId}, force: true}) 
@@ -144,54 +112,58 @@ const moviesController = {
         .catch(error => res.send(error)) 
     },
 
-    login: function (req,res) {
-        res.render('login', {title: 'Fun Movies Now - Acceso'})
+    'login': function (req,res) {
+        /* if (req.session.name){
+            let data =req.session
+            return res.render('login', {title: 'Fun Movies Now - Acceso', data})
+        } */
+        res.render('login', {title: 'Fun Movies Now - Acceso'});
+    },  
 
-        res.render(path.join(__dirname, '../views/login.ejs'));
-        check('name').inLenght({min: 1}).withMessage('Debe ingresar un nombre de usuario valido');
-        
-    },
-
-
-
-    register: function (req,res) {
-        res.render('register', {title: 'Fun Movies Now - Registro'});
-        //res.sendFile(path.join(__dirname, '../views/register.ejs'));
-    },
-
-
-	newRecord:  (req, res) => {
+    'session': function (req,res) {
         const {body} = req;
         let errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.render('/register', {errors: errors.array() });
+            res.render('login', {errors: errors.array() });
         }else {
-            req.session.firstName = req.body.firstName;
-            req.session.lastName = req.body.lastName;
-            req.session.email = req.body.email;
-            req.session.psw = req.body.psw;
-            req.session.psw_repeat = req.body.psw_repeat;
-            req.session.category = req.body.category;
             if (req.body.remember){
-                res.cookie('record', req.body, {maxAge: 60 * 1000})
+                res.cookie('sesion', req.body, {maxAge: 60 * 1000})
             }
-            let newUser = {
-		 	    id: users[users.length - 1].id + 1,
-		 	    ...req.body,
-            }
+            res.render('/');
         }
-		users.push(newUser);
-		fs.writeFileSync(usersFilePath, JSON.stringify(users, null, ' '));
-		return res.redirect('/login/');
-/* 
-            let user = req.body;
-            userId = userModel.create(user);
-            res.redirect('/');np
- */       
+    },
+
+
+    'register': function (req,res) {
+        res.render('register', {title: 'Fun Movies Now - Registro'});
+    },
+
+
+	'newRecord':  (req, res) => {
+        const {body} = req;
+        let errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.render('register', {errors: errors.array() });
+        }else {
+                Users
+                .create(
+                    {
+                        name: req.body.name,
+                        password: req.body.password,
+                        email: req.body.email,
+                        remember_token: req.body.remember_token,
+                        rol: req.body.rol,
+                    }
+                )
+                .then(()=> {
+                    let user = req.body;
+                    userId = Users.create(user);
+                    //res.redirect('/login', next);//np
+                    return res.redirect('/login')})            
+                .catch(error => res.send(error))
+                }
+       
 	},
-
-
-
 
 }
 
