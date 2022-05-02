@@ -27,7 +27,7 @@ const mainController = {
     'login': function (req,res) {
         /* if (req.session.name){
             let data =req.session
-            return res.render('login', {title: 'Fun Movies Now - Acceso', data})
+            return res.render('login', {title: 'Acceso', data})
         } */
         res.render('login', {title: 'Acceso'});
     },  
@@ -82,85 +82,49 @@ const mainController = {
         const {body} = req;
         let errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.render('register', {errors: errors.array(),oldData: req.body });
+            res.send('Información erronea, revise por favor');
+            res.render('register', {erors: errors.array(), oldData: req.body });
         }else{
-        
-            let mailInDB = req.body.mail;
-            console.log(mailInDB);
-        }
-
-    /*        
-            Users
-            .findOne(mailInDB) 
-            .then((mailInDB)=> {
-                if (mailInDB) {
-                return res.render('register', {
-                    errors: {
-                        email: {
-                            msg: 'Este email ya está registrado'
-                        }
-                    },
-                    oldData: req.body
-                });
+                let mailInDB = req.body.mail;
+                console.log(errors);
+                //Users
+                db.User.findAll(mailInDB) 
+                .then((mailInDB)=> {
+                    if (mailInDB) {
+                    return res.render('register', {
+                        errors: {
+                            email: {
+                                msg: 'Este email ya está registrado'
+                            }
+                        },
+                        oldData: req.body
+                    });
+                    }
                 }
-            }
-        
-            )
 
-            .create(
-            {
-                name: req.body.name,
-                password: req.body.password,
-                email: req.body.email,
-                remember_token: req.body.remember_token,
-                rol: req.body.rol,
+                )
+
+                db.User.create(
+                {
+                    name: req.body.name,
+                    password: req.body.password,
+                    email: req.body.email,
+                    remember_token: req.body.remember_token,
+                    rol: req.body.rol,
+                }
+                )
+                .then(()=> {
+                    let user = req.body;
+                    userId = Users.create(user);
+                //res.redirect('/login', next);//np
+                        return res.redirect('/login')})                              
+                .catch(error => res.send(error))
             }
-            )
-            .then(()=> {
-                let user = req.body;
-                userId = Users.create(user);
-            //res.redirect('/login', next);//np
-                 return res.redirect('/login')})                              
-            .catch(error => res.send(error))
+            console.log(errors);
+
         }
-  --------------------------------       */
-        
          
-       /*  let userToCreate = {
-			...req.body,
-			password: bcryptjs.hashSync(req.body.password, 10),
-		}
-        let userCreated = User.create(userToCreate);
- */
-		
-        
-        
 
-
-
-
-/*
-
-            req.session.name = req.body.name;
-            req.session.psw = req.body.password;
-            req.session.psw_repeat = req.body.psw_repeat;
-            req.session.email = req.body.email;
-            req.session.rememberToken = req.body.remember_token;
-            req.session.rol = req.body.rol;
-            if (req.body.remember){
-                res.cookie('record', req.body, {maxAge: 60 * 1000})
-            }
-            let newUser = {
-		 	    id: users[users.length - 1].id + 1,
-		 	    ...req.body,
-            }
-        }
-		
-*/
-      
-       
- 	 },
-
-    }
+ 	 };
     
 module.exports = mainController;
