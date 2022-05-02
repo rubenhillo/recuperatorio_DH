@@ -7,6 +7,7 @@ const app = express();
 
 const session = require('express-session');
 const cookies = require('cookie-parser');
+
 app.set('views', path.resolve(__dirname, './views'));
 app.set('view engine', 'ejs');
 

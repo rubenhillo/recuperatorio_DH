@@ -20,7 +20,7 @@ module.exports = (sequelize, dataTypes) => {
             type: dataTypes.STRING(255),
             allowNull: false
         },
-        rememberToken: {
+        remember_token: {
             type: dataTypes.STRING(100),
             allowNull: false
         },
@@ -37,16 +37,5 @@ module.exports = (sequelize, dataTypes) => {
         deletedAt: false
     }
     const User = sequelize.define(alias, cols, config); 
-
-    /* Actor.associate = function (models) {
-        Actor.belongsToMany(models.Movie, { // models.Movie -> Movies es el valor de alias en movie.js
-            as: "movies",
-            through: 'actor_movie',
-            foreignKey: 'actor_id',
-            otherKey: 'movie_id',
-            timestamps: false
-        })
-    } */
-
     return User
 };

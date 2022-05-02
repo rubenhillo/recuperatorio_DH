@@ -29,7 +29,8 @@ const moviesController = {
                /*  include: ['actors'],
                 include: ['actor_movie'], */
                 where: {
-                    [actor_id = req.body.actor.id]:[movie.id = movie_id]
+                    actor_id : {[Op.like] : req.body.actor.id},
+                    movie_id : {[Op.like] : req.body.movie.id}
                 },
             })
             .then(movie => {
@@ -115,7 +116,7 @@ const moviesController = {
     'login': function (req,res) {
         /* if (req.session.name){
             let data =req.session
-            return res.render('login', {title: 'Fun Movies Now - Acceso', data})
+            return res.render('login', {title: 'Acceso', data})
         } */
         res.render('login', {title: 'Fun Movies Now - Acceso'});
     },  
@@ -133,7 +134,7 @@ const moviesController = {
         }
     },
 
-
+/* 
     'register': function (req,res) {
         res.render('register', {title: 'Fun Movies Now - Registro'});
     },
@@ -164,7 +165,7 @@ const moviesController = {
                 }
        
 	},
-
+ */
 }
 
 module.exports = moviesController;
